@@ -1,18 +1,21 @@
 import { useState } from 'react'; // useState 추가
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '../customHooks/UserContext'
 import { ROUTES } from '../route/RouteList';
 import { LoginContainer, LoginForm, LoginTitleH1, LoginInput, LoginBtn, SignupAndIdPwdFind, ATag } from './LoginPage.styled'
 
 const LoginPage = () => {
     const { searchUser } = useUser();
+    const navigate = useNavigate();
     
-    // 입력값을 저장할 state 만들기
     const [userId, setUserId] = useState('');
     const [userPwd, setUserPwd] = useState('');
 
-    // 로그인 버튼 눌렀을 때 실행할 함수
     const handleLogin = () => {
-        searchUser(userId, userPwd);
+        const loggedInUser = searchUser(userId, userPwd);
+        if (loggedInUser) {
+            navigate(`/main/${loggedInUser.id}`);
+        }
     }
 
     return (

@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export const LoginContainer = styled.div`
+export const SignupContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     height: auto; 
-    min-height: 30vh;
+    min-height: 40vh;
     width: 50vw;
     background: #f8f9fa;
     padding: 24px 0; 
@@ -16,20 +16,18 @@ export const LoginContainer = styled.div`
     border: 1px solid #333;
 `
 
-export const LoginTitleH1 = styled.h1`
+export const SignupTitleH1 = styled.h1`
     font-size: 26px;
     font-weight: bold;
     color: #333;
 `
 
-export const LoginForm = styled.div`
+export const SignupForm = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 12px;
 `
 
-export const LoginInput = styled.input`
-    padding: 6px;
+export const SignupInput = styled.input`
     padding: 10px;
     margin-bottom: 8px; 
     border: 1px solid #ccc;
@@ -37,14 +35,14 @@ export const LoginInput = styled.input`
     font-size: 16px;
 `
 
-export const SignupAndIdPwdFind = styled.div`
+export const BackToLogin = styled.div`
     border-top: 2px solid #333;
     border-bottom: 2px solid #333;
-    margin-top: 12px;
     padding: 6px 12px;
+    margin-top: 12px;
 `
 
-export const LoginBtn = styled.button`
+export const SignupBtn = styled.button`
     margin-top: 12px;
     display: flex;
     width: auto;
@@ -53,7 +51,6 @@ export const LoginBtn = styled.button`
     border: none;
     color: #fff;
     font-size: 16px;
-    padding: 6px 12px;
     padding: 10px 15px;
     border-radius: 4px;
     cursor: pointer;
@@ -61,7 +58,6 @@ export const LoginBtn = styled.button`
     &:hover {
         background: #505050;
     }
-
 `
 
 export const ATag = styled(Link)`

@@ -1,9 +1,9 @@
 export const ROUTES = {
     login: '/',
-    main: 'main',
+    main: 'main/:id',
     findIdPwd: 'findIdPwd',
     signup: 'signup',
     detail: 'detail',
-    mypage: 'mypage',
+    mypage: 'mypage/:id',
     error: '*'
 }
