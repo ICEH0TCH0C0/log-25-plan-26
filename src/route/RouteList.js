@@ -3,7 +3,7 @@ export const ROUTES = {
     main: 'main/:id',
     findIdPwd: 'findIdPwd',
     signup: 'signup',
-    detail: 'detail',
+    detail: 'main/:id/:date',
     mypage: 'mypage/:id',
     error: '*'
 }
