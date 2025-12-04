@@ -70,3 +70,12 @@ export const DayPlanItem = styled.div`
         border-bottom: none;
     }
 `
+
+export const SearchInput = styled.input`
+    padding: 6px;
+    margin-bottom: 8px; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 30vw;
+`

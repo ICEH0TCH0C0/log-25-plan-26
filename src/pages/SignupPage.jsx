@@ -20,6 +20,13 @@ const SignupPage = () => {
       alert('모든 필드를 입력해주세요.')
       return
     }
+
+    // 2. 비밀번호 길이 체크 (추가)
+    if (userPwd.length < 4) {
+      alert('비밀번호는 4자리 이상이어야 합니다.');
+      return;
+    }
+
     if (addUser(userId, userPwd, userName, userPhone, userEmail)) {
       alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.')
       navigate(ROUTES.login)

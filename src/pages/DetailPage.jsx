@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { DayPlanbackBtn, DayPlanBtnContainer, DayPlanContainer, DayPlanContent, DayPlanHeader, DayPlanItem, DayPlanTitle } from './DetailPage.styled'
+import { DayPlanbackBtn, DayPlanBtnContainer, DayPlanContainer, DayPlanContent, DayPlanHeader, DayPlanItem, DayPlanTitle, SearchInput } from './DetailPage.styled'
 import { useParams } from 'react-router-dom'
 import { Strong } from '../commonStyled/common.styled'
 import { Input } from './MyPage.styled'
@@ -8,14 +8,11 @@ import { useUser } from '../customHooks/UserContext'
 const DetailPage = () => {
   const { date } = useParams();
   const { currentUser, addPlan, updatePlan, deletePlan } = useUser();
-  
-  // 현재 날짜에 해당하는 일정만 필터링
-  const dailyPlans = useMemo(() => {
-    return currentUser?.userPlan?.filter(plan => plan.date === date) || [];
-  }, [currentUser, date]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // 수정 중인 일정의 ID, 제목, 내용을 관리하는 상태
   const [editing, setEditing] = useState({ id: null, title: '', content: '' });
+  
   // 새로 추가할 일정의 제목, 내용을 관리하는 상태
   const [newPlan, setNewPlan] = useState({ title: '', content: '' });
 
@@ -48,16 +45,30 @@ const DetailPage = () => {
     deletePlan(planId);
   }
 
+  const filteredPlans = useMemo(() => {
+    const plansOnDate = currentUser?.userPlan?.filter(plan => plan.date === date) || [];
+
+    if (searchTerm === '') return plansOnDate;
+
+    return plansOnDate.filter(plan => plan.title.toLowerCase().includes(searchTerm.toLowerCase()))
+  }, [currentUser, date, searchTerm])
+
   return (
     <DayPlanContainer>
       <DayPlanHeader>
         <DayPlanTitle>{date} 일정</DayPlanTitle>
+        <SearchInput 
+          type="text" 
+          placeholder="일정 제목 검색..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+      />
         <DayPlanBtnContainer>
           <DayPlanbackBtn onClick={() => window.history.back()}>뒤로가기</DayPlanbackBtn>
         </DayPlanBtnContainer>
       </DayPlanHeader>
       <DayPlanContent>
-        {dailyPlans.length > 0 ? dailyPlans.map((plan) => (
+        {filteredPlans.length > 0 ? filteredPlans.map((plan) => (
           <DayPlanItem key={plan.id}>
             {editing.id === plan.id ? (
               <>
