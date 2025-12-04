@@ -6,9 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../route/RouteList.js'
 
 const MyPage = () => {
-  const { deleteUser, updateUser } = useUser();
-  const savedUser = sessionStorage.getItem('currentUser');
-  const currentUser = savedUser ? JSON.parse(savedUser) : null;
+  const { currentUser, deleteUser, updateUser } = useUser();
   const [userInfo, setUserInfo] = useState(currentUser || {});
   const nav = useNavigate();
 
@@ -28,9 +26,9 @@ const MyPage = () => {
   const handleDelete = () => {
     if (window.confirm('정말로 탈퇴하시겠습니까?')) {
       deleteUser(currentUser.userId);
+      alert('탈퇴되었습니다.');
+      nav(ROUTES.login);
     }
-    alert('탈퇴되었습니다.');
-    nav(ROUTES.login);
   }
 
   return (

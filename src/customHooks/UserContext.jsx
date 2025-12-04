@@ -39,7 +39,8 @@ export const UserProvider = ({children}) => {
             userPwd,
             userName,
             userPhone,
-            userEmail
+            userEmail,
+            userPlan: []
         }
 
         setUsers(prev => [...prev, newUser]);
@@ -111,6 +112,48 @@ export const UserProvider = ({children}) => {
         }
     };
 
+    // 일정 추가 함수
+    const addPlan = (date, newPlan) => {
+        if (!currentUser) return;
+
+        // 새로운 일정을 포함한 업데이트된 사용자 객체 생성
+        const updatedUser = {
+            ...currentUser,
+            userPlan: [...(currentUser.userPlan || []), { ...newPlan, date: date, id: Date.now() }]
+        };
+        // 기존 updateUser 함수를 호출하여 세션과 로컬스토리지 모두 업데이트
+        updateUser(updatedUser);
+    };
+
+    // 일정 수정 함수
+    const updatePlan = (planId, updatedPlanData) => {
+        if (!currentUser) return;
+
+        const updatedPlans = currentUser.userPlan.map(plan =>
+            plan.id === planId ? { ...plan, ...updatedPlanData } : plan
+        );
+
+        const updatedUser = {
+            ...currentUser,
+            userPlan: updatedPlans
+        };
+        updateUser(updatedUser);
+    };
+
+    // 일정 삭제 함수
+    const deletePlan = (planId) => {
+        if (!currentUser) return;
+
+        if (window.confirm('정말로 이 일정을 삭제하시겠습니까?')) {
+            const updatedPlans = currentUser.userPlan.filter(plan => plan.id !== planId);
+            const updatedUser = {
+                ...currentUser,
+                userPlan: updatedPlans
+            };
+            updateUser(updatedUser);
+        }
+    };
+
     const value = {
         users,
         addUser,
@@ -120,7 +163,10 @@ export const UserProvider = ({children}) => {
         findUserId,
         findUserPwd,
         deleteUser,
-        updateUser
+        updateUser,
+        addPlan,
+        updatePlan,
+        deletePlan
     }
 
     return (
