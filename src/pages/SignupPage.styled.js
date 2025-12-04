@@ -20,6 +20,7 @@ export const SignupTitleH1 = styled.h1`
     font-size: 26px;
     font-weight: bold;
     color: #333;
+    margin-bottom: 24px;
 `
 
 export const SignupForm = styled.div`
