@@ -27,6 +27,12 @@ export const DayPlanTitle = styled.h2`
     text-align: center;
 `
 
+export const DayPlanBtnContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`
+
 export const DayPlanbackBtn = styled.button`
     padding: 6px 12px;
     font-size: 16px;
