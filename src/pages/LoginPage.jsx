@@ -1,15 +1,15 @@
-import { useState } from 'react'; // useState 추가
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../customHooks/UserContext'
 import { ROUTES } from '../route/RouteList';
 import { LoginContainer, LoginForm, LoginTitleH1, LoginInput, LoginBtn, SignupAndIdPwdFind, ATag } from './LoginPage.styled'
+import useInput from '../customHooks/useInput';
 
 const LoginPage = () => {
     const { searchUser } = useUser();
     const navigate = useNavigate();
     
-    const [userId, setUserId] = useState('');
-    const [userPwd, setUserPwd] = useState('');
+    const [userId, handleUserId] = useInput('');
+    const [userPwd, handleUserPwd] = useInput('');
 
     const handleLogin = () => {
         const loggedInUser = searchUser(userId, userPwd);
@@ -26,13 +26,13 @@ const LoginPage = () => {
                 type='text' 
                 placeholder='아이디를 입력해주세요!'
                 value={userId}
-                onChange={(e) => setUserId(e.target.value)}
+                onChange={handleUserId}
             />
             <LoginInput 
                 type='password' // 비밀번호는 가려져야 하니 password 타입 권장
                 placeholder='비밀번호를 입력해주세요!'
                 value={userPwd}
-                onChange={(e) => setUserPwd(e.target.value)}
+                onChange={handleUserPwd}
             />
             <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
             

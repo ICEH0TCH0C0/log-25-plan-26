@@ -1,8 +1,63 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Input, MyPagebackBtn, MyPageContainer, MyPageContent, MyPageDeleteBtn, MyPageHeader, MyPageHeaderBtnContainer, MyPageItem, MyPageTitle, MyPageUpdateBtn } from './MyPage.styled'
+import { Strong } from '../commonStyled/common.styled'
+import { useUser } from '../customHooks/UserContext.jsx'
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../route/RouteList.js'
 
 const MyPage = () => {
+  const { deleteUser, updateUser } = useUser();
+  const savedUser = sessionStorage.getItem('currentUser');
+  const currentUser = savedUser ? JSON.parse(savedUser) : null;
+  const [userInfo, setUserInfo] = useState(currentUser || {});
+  const nav = useNavigate();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleUpdate = () => {
+    updateUser(userInfo);
+    alert('수정되었습니다.');
+  }
+
+  const handleDelete = () => {
+    if (window.confirm('정말로 탈퇴하시겠습니까?')) {
+      deleteUser(currentUser.userId);
+    }
+    alert('탈퇴되었습니다.');
+    nav(ROUTES.login);
+  }
+
   return (
-    <div>MyPage</div>
+    <MyPageContainer>
+      <MyPageHeader>
+        <MyPageTitle>마이 페이지</MyPageTitle>
+        <MyPageHeaderBtnContainer>
+          <MyPageUpdateBtn onClick={handleUpdate}>수정하기</MyPageUpdateBtn>
+          <MyPageDeleteBtn onClick={handleDelete}>탈퇴하기</MyPageDeleteBtn>
+          <MyPagebackBtn onClick={() => window.history.back()}>뒤로가기</MyPagebackBtn>
+        </MyPageHeaderBtnContainer>
+      </MyPageHeader>
+      <MyPageContent>
+        <MyPageItem>
+          <Strong>이름 : <Input type="text" name="userName" value={userInfo.userName} onChange={handleInputChange}/></Strong>
+        </MyPageItem>
+        <MyPageItem>
+          <Strong>아이디 : <Input type="text" name="userId" value={userInfo.userId} onChange={handleInputChange} readOnly /></Strong>
+        </MyPageItem>
+        <MyPageItem>
+          <Strong>휴대폰 번호 : <Input type="text" name="userPhone" value={userInfo.userPhone} onChange={handleInputChange}/></Strong>
+        </MyPageItem>
+        <MyPageItem>
+          <Strong>이메일 : <Input type="text" name="userEmail" value={userInfo.userEmail} onChange={handleInputChange}/></Strong>
+        </MyPageItem>
+      </MyPageContent>
+    </MyPageContainer>
   )
 }
 

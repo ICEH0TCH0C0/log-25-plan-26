@@ -91,6 +91,26 @@ export const UserProvider = ({children}) => {
         return foundUser ? foundUser.userPwd : null;
     }
 
+    // 현재 세션에 저장된 user 삭제
+    const deleteUser = (userId) => {
+        logout();
+        const updatedUsers = users.filter(user => user.userId !== userId);
+        setUsers(updatedUsers);
+    }
+
+    // 사용자 정보 업데이트
+    const updateUser = (updatedUser) => {
+        const updatedUsers = users.map(user => 
+            user.id === updatedUser.id ? updatedUser : user
+        );
+        setUsers(updatedUsers);
+
+        if (currentUser && currentUser.id === updatedUser.id) {
+            setCurrentUser(updatedUser);
+            sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        }
+    };
+
     const value = {
         users,
         addUser,
@@ -98,7 +118,9 @@ export const UserProvider = ({children}) => {
         currentUser,
         logout,
         findUserId,
-        findUserPwd
+        findUserPwd,
+        deleteUser,
+        updateUser
     }
 
     return (

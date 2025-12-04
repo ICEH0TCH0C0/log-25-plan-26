@@ -1,14 +1,14 @@
-import { useState } from 'react'
 import { useUser } from '../customHooks/UserContext'
 import { ROUTES } from '../route/RouteList'
 import { FindContainer, FindBox, FindTitle, FindInput, FindButton, BackToLoginLink } from './FindIdPwdPage.styled'
+import useInput from '../customHooks/useInput'
 
 const FindIdPwdPage = () => {
   const { findUserId, findUserPwd } = useUser()
 
-  const [nameForId, setNameForId] = useState('')
-  const [phoneForId, setPhoneForId] = useState('')
-  const [idForPwd, setIdForPwd] = useState('')
+  const [nameForId, handleNameForId] = useInput('')
+  const [phoneForId, handlePhoneForId] = useInput('')
+  const [idForPwd, handleIdForPwd] = useInput('')
 
   const handleFindId = () => {
     if (!nameForId || !phoneForId) {
@@ -40,13 +40,13 @@ const FindIdPwdPage = () => {
     <FindContainer>
       <FindBox>
         <FindTitle>아이디 찾기</FindTitle>
-        <FindInput type="text" placeholder="이름" value={nameForId} onChange={(e) => setNameForId(e.target.value)} />
-        <FindInput type="tel" placeholder="휴대폰 번호" value={phoneForId} onChange={(e) => setPhoneForId(e.target.value)} />
+        <FindInput type="text" placeholder="이름" value={nameForId} onChange={handleNameForId} />
+        <FindInput type="tel" placeholder="휴대폰 번호" value={phoneForId} onChange={handlePhoneForId} />
         <FindButton onClick={handleFindId}>아이디 찾기</FindButton>
       </FindBox>
       <FindBox>
         <FindTitle>비밀번호 찾기</FindTitle>
-        <FindInput type="text" placeholder="아이디" value={idForPwd} onChange={(e) => setIdForPwd(e.target.value)} />
+        <FindInput type="text" placeholder="아이디" value={idForPwd} onChange={handleIdForPwd} />
         <FindButton onClick={handleFindPwd}>비밀번호 찾기</FindButton>
       </FindBox>
       <BackToLoginLink to={ROUTES.login}>로그인 페이지로 돌아가기</BackToLoginLink>

@@ -2,7 +2,9 @@ import styled from "styled-components";
 
 export const CalendarContainer = styled.div`
     width: 90vw;
-    height: 60vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 20px;
     padding: 20px;
     border: 1px solid #333;
     background-color: #f8f9fa;
