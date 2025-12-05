@@ -34,6 +34,7 @@ const Calendar = () => {
         weekends={true}
         selectable={true}
         selectMirror={true}
+        dayMaxEventRows={3}
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
