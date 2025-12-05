@@ -95,19 +95,28 @@ export const UserProvider = ({children}) => {
     // 현재 세션에 저장된 user 삭제
     const deleteUser = (userId) => {
         logout();
+
+        // id와 같은 객체를 제외한 남은 객체들을 다시 저장
         const updatedUsers = users.filter(user => user.userId !== userId);
         setUsers(updatedUsers);
     }
 
     // 사용자 정보 업데이트
     const updateUser = (updatedUser) => {
+        // 전달받은 값을 로컬 스토리지에 저장된 객체 배열을 id와 같은 값이 있는지 찾아냄
         const updatedUsers = users.map(user => 
             user.id === updatedUser.id ? updatedUser : user
         );
+
+        // id가 같은 값을 가진 객체를 setUsers를 이용해 상태값을 저장
         setUsers(updatedUsers);
 
+        // 로그인한 사용자가 존재하고 수정된 사용자의 id가 서로 같은지 확인
         if (currentUser && currentUser.id === updatedUser.id) {
+            // 상태를 갱신
             setCurrentUser(updatedUser);
+
+            // 세션에도 문자열로 변환하여 저장
             sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
         }
     };
@@ -128,15 +137,20 @@ export const UserProvider = ({children}) => {
     // 일정 수정 함수
     const updatePlan = (planId, updatedPlanData) => {
         if (!currentUser) return;
-
+        
+        // 일정 아이디와 같은 일정 배열을 찾아 updatePlanData를 덮어씌움
         const updatedPlans = currentUser.userPlan.map(plan =>
             plan.id === planId ? { ...plan, ...updatedPlanData } : plan
         );
 
+        // 기존 사용자를 가져오고, 
+        // 사용자 안에 있는 userPlan의 값을 updatePlanData로 덮어씌운 수정된 일정으로 변경
         const updatedUser = {
             ...currentUser,
             userPlan: updatedPlans
         };
+
+        // 사용자 수정 함수에 수정된 사용자 정보를 보냄
         updateUser(updatedUser);
     };
 
