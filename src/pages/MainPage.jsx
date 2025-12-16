@@ -12,7 +12,7 @@ const MainPage = () => {
 
   useEffect(() => {
     // currentUser가 null이 아닐 때(즉, 로그아웃 과정이 아닐 때)만 접근 권한을 확인합니다.
-    if (currentUser && String(currentUser.id) !== id) {
+    if (currentUser && String(currentUser.userNo) !== id) {
       alert('잘못된 접근입니다. 로그인 페이지로 이동합니다.')
       logout() // 혹시 모를 세션 정보를 정리
       navigate(ROUTES.login)

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const UserContext = createContext();
 
@@ -8,11 +8,19 @@ export const useUser = () => {
 }
 
 export const UserProvider = ({children}) => {
-    //로컬 스토리지에 저장된 사용자 목록을 불러오거나, 없으면 빈 배열로 초기화
-    const [users, setUsers] = useState(() => {
-        const saveUser = localStorage.getItem('users');
-        return saveUser ? JSON.parse(saveUser) : [];
-    })
+    //스프링 부트에서 화면이 켜질때 한 번만 User를 사져옴
+    const [users, setUsers] = useState([]);
+    // useEffect(() => {
+    //     fetch('/api/user/list', {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+
+    //     .then(data => setUsers(data))
+    //     .catch(err => console.error("데이터 불러오기 실패:", err));
+    // }, []);
 
     //현재 로그인한 사용자 상태 관리
     const [currentUser, setCurrentUser] = useState(() => {
@@ -20,58 +28,62 @@ export const UserProvider = ({children}) => {
         return savedUser ? JSON.parse(savedUser) : null;
     })
 
-    //사용자 목록이 변경될 때마다 로컬 스토리지에 저장
-    useEffect(() => {
-        localStorage.setItem('users', JSON.stringify(users));
-    }, [users])
-
     //새로운 사용자 추가 함수
-    const addUser = (userId, userPwd, userName, userPhone, userEmail) => {
-        const isDuplicate = users.some(user => user.userId === userId);
-        if (isDuplicate) {
-            alert('이미 사용 중인 아이디입니다.');
-            return false;
-        }
-
+    const addUser = async (userId, userPwd, userName, userPhone, userEmail) => {
         const newUser = {
-            id: Date.now(),
-            userId,
-            userPwd,
-            userName,
-            userPhone,
-            userEmail,
+            userId: userId,
+            userPwd: userPwd,
+            userName: userName,
+            userPhone: userPhone,
+            userEmail: userEmail,
             userPlan: []
         }
 
-        setUsers(prev => [...prev, newUser]);
+        try {
+            const response = await fetch("/api/user/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newUser)
+            });
 
-        return true;
+            if (response.ok) {
+                return true;
+            } else {
+                alert("회원 등록에 실패했습니다.");
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+            alert("회원가입에 실패했습니다.");
+            return false;
+        }
     }
 
     //사용자 검색 및 로그인 함수
-    const searchUser = (loginUserId, LoginUserPwd) => {
-        if (loginUserId === '' || LoginUserPwd === '') {
-            alert("아이디와 비밀번호을 적어주세요!")
-            return false
-        }
+    const login = async (userId, userPwd) => {
+        try {
+            // GET 방식은 보안에 취약하므로 보통 POST
+            const response = await fetch("/api/user/login", { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, userPwd }) 
+            });
 
-        const userData = localStorage.getItem('users');
-        const userArray = userData ? JSON.parse(userData) : [];
-        const userInfo = userArray.find(prev => prev.userId === loginUserId)
-
-        if(userInfo) {
-          if (userInfo.userPwd === LoginUserPwd) {
-            alert(`${userInfo.userName}님 환영합니다.`);
-            setCurrentUser(userInfo);
-            sessionStorage.setItem('currentUser', JSON.stringify(userInfo));
-            return userInfo;
-          } else {
-            alert("비밀번호가 틀렸습니다.");
-          }
-        } else {
-            alert("존재하지 않은 아이디입니다.");
+            if (response.ok) {
+                const memberInfo = await response.json(); // 서버가 찾아준 내 정보
+                setCurrentUser(memberInfo); // 상태 업그레이드
+                sessionStorage.setItem('currentUser', JSON.stringify(memberInfo)); // 세션에 저장
+                return memberInfo;
+            } else {
+                alert("아이디 또는 비밀번호가 틀렸거나 아이디가 없습니다.");
+                return null;
+            }
+        } catch (error) {
+            console.error("로그인 에러:", error);
+            return null;
         }
-        return false;
     }
 
     //로그아웃 함수
@@ -171,7 +183,7 @@ export const UserProvider = ({children}) => {
     const value = {
         users,
         addUser,
-        searchUser,
+        login,
         currentUser,
         logout,
         findUserId,

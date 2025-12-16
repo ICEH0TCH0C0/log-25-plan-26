@@ -5,16 +5,19 @@ import { LoginContainer, LoginForm, LoginTitleH1, LoginInput, LoginBtn, SignupAn
 import useInput from '../customHooks/useInput';
 
 const LoginPage = () => {
-    const { searchUser } = useUser();
+    const { login } = useUser();
     const navigate = useNavigate();
     
     const [userId, handleUserId] = useInput('');
     const [userPwd, handleUserPwd] = useInput('');
 
-    const handleLogin = () => {
-        const loggedInUser = searchUser(userId, userPwd);
-        if (loggedInUser) {
-            navigate(`/main/${loggedInUser.id}`);
+    const handleLogin = async () => {
+        const loggedInUser = await login(userId, userPwd);
+        if (loggedInUser && loggedInUser.userNo) {
+            navigate(`/main/${loggedInUser.userNo}`);
+        } else {
+            console.error("로그인 정보에 ID가 없습니다:", loggedInUser);
+            alert("로그인 정보를 불러올 수 없습니다.");
         }
     }
 
