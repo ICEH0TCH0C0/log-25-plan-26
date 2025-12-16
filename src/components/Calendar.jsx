@@ -13,7 +13,7 @@ const Calendar = () => {
   const handleDateClick = (arg) => {
     // currentUser.id를 사용하여 URL을 생성합니다.
     if (currentUser) {
-      nav(`/main/${currentUser.id}/${arg.dateStr}`);
+      nav(`/main/${currentUser.userNo}/${arg.dateStr}`);
     }
   }
 

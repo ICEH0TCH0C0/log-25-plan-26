@@ -18,15 +18,23 @@ const MyPage = () => {
     }));
   };
 
-  const handleUpdate = () => {
-    updateUser(userInfo);
-    alert('수정되었습니다.');
+  const handleUpdate = async () => {
+    const isSuccess = await updateUser(userInfo);
+  
+    if (isSuccess) {
+      alert('수정되었습니다.');
+    }
   }
 
-  const handleDelete = () => {
-    if (window.confirm('정말로 탈퇴하시겠습니까?')) {
-      deleteUser(currentUser.userId);
-      alert('탈퇴되었습니다.');
+  const handleDelete = async () => {
+    if (!window.confirm('정말로 탈퇴하시겠습니까? (복구할 수 없습니다)')) {
+      return;
+    }
+
+    const isSuccess = await deleteUser(userInfo.userNo); 
+      
+    if (isSuccess) {
+      alert('탈퇴되었습니다. 이용해 주셔서 감사합니다.');
       nav(ROUTES.login);
     }
   }
