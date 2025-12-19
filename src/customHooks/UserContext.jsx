@@ -22,8 +22,7 @@ export const UserProvider = ({children}) => {
             userPwd: userPwd,
             userName: userName,
             userPhone: userPhone,
-            userEmail: userEmail,
-            userPlan: []
+            userEmail: userEmail
         }
 
         try {
@@ -60,9 +59,16 @@ export const UserProvider = ({children}) => {
 
             if (response.ok) {
                 const memberInfo = await response.json(); // 서버가 찾아준 내 정보
-                setCurrentUser(memberInfo); // 상태 업그레이드
-                sessionStorage.setItem('currentUser', JSON.stringify(memberInfo)); // 세션에 저장
-                return memberInfo;
+                
+                // [수정] 서버 DTO의 'plans'를 프론트엔드 상태인 'userPlan'으로 매핑 (중복 제거)
+                const { plans, ...rest } = memberInfo;
+                const mappedUser = {
+                    ...rest,
+                    userPlan: plans || [] 
+                };
+                setCurrentUser(mappedUser); // 상태 업그레이드
+                sessionStorage.setItem('currentUser', JSON.stringify(mappedUser)); // 세션에 저장
+                return mappedUser;
             } else {
                 alert("아이디 또는 비밀번호가 틀렸거나 아이디가 없습니다.");
                 return null;
@@ -128,13 +134,14 @@ export const UserProvider = ({children}) => {
     // 현재 세션에 저장된 user 삭제
     const deleteUser = async (userNo) => {
         try {
-            // DELETE 메서드로 삭제 요청 (PK인 userNo를 보냄)
-            const response = await fetch(`/api/user/delete/${userNo}`, {
+            // [수정] 서버에 deleteUser 기능이 구현되어 있어야 함
+            // UserController에 @DeleteMapping("/{userNo}") 추가 필요
+            const response = await fetch(`/api/user/${userNo}`, { 
                 method: "DELETE"
             });
 
             if (response.ok) {
-                logout(); // 로그아웃 처리 (세션 비우기)
+                logout(); 
                 return true;
             } else {
                 alert("탈퇴 처리에 실패했습니다.");
@@ -150,22 +157,25 @@ export const UserProvider = ({children}) => {
     // 사용자 정보 업데이트
     const updateUser = async (updatedUser) => {
         try {
-            // PUT 메서드로 수정 요청 보냄
-            const response = await fetch("/api/user/update", { 
+            // [수정] URL에 userNo 포함 (/api/user/{userNo})
+            const response = await fetch(`/api/user/${updatedUser.userNo}`, { 
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedUser)
             });
 
             if (response.ok) {
-                // 서버가 수정된 최신 정보를 돌려준다고 가정
                 const newInfo = await response.json(); 
                 
-                // 프론트엔드 상태(Context)와 세션 스토리지 갱신
-                setCurrentUser(newInfo);
-                sessionStorage.setItem('currentUser', JSON.stringify(newInfo));
-                
-                return true; // 성공
+                // [수정] 정보 수정 후에도 'plans'를 'userPlan'으로 매핑 (중복 제거)
+                const { plans, ...rest } = newInfo;
+                const mappedNewInfo = {
+                    ...rest,
+                    userPlan: plans || []
+                };
+                setCurrentUser(mappedNewInfo);
+                sessionStorage.setItem('currentUser', JSON.stringify(mappedNewInfo));
+                return true; 
             } else {
                 alert("정보 수정에 실패했습니다.");
                 return false;
@@ -182,27 +192,29 @@ export const UserProvider = ({children}) => {
         if (!currentUser) return;
         
         try {
-            const response = await fetch("/api/plan/add", {
+            const response = await fetch(`/api/plan/${currentUser.userNo}`, { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    userNo: currentUser.userNo,
                     date: date,
                     planTitle: newPlan.title,
-                    planContent: newPlan.content
+                    planContent: newPlan.content,
+                    categoryNo: newPlan.categoryNo
                 })
             });
 
             if (response.ok) {
-                // 서버가 돌려준 진짜 ID(planNo)를 받습니다.
-                const realPlanId = await response.json(); 
-
-                // 임시 ID(Date.now) 대신 진짜 ID를 넣어서 저장합니다.
+                const savedPlanDto = await response.json(); 
                 const updatedUser = {
                     ...currentUser,
                     userPlan: [
                         ...(currentUser.userPlan || []), 
-                        { ...newPlan, date: date, id: realPlanId, planNo: realPlanId } 
+                        { 
+                            planNo: savedPlanDto.planNo,
+                            planTitle: savedPlanDto.planTitle,
+                            planContent: savedPlanDto.planContent,
+                            date: savedPlanDto.date
+                        } 
                     ]
                 };
                 setCurrentUser(updatedUser);
@@ -216,20 +228,25 @@ export const UserProvider = ({children}) => {
     // 일정 수정 함수
     const updatePlan = async (planId, updatedPlanData) => {
         try {
-            const response = await fetch("/api/plan/update", {
+            // [수정] URL 변경 (/api/plan/{planNo})
+            const response = await fetch(`/api/plan/${planId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    planNo: planId, // planId가 DB의 PK여야 함
+                    // planNo는 URL에 있으므로 body에는 선택사항 (DTO에 따라 다름)
                     planTitle: updatedPlanData.title,
-                    planContent: updatedPlanData.content
+                    planContent: updatedPlanData.content,
+                    categoryNo: updatedPlanData.categoryNo
                 })
             });
 
             if(response.ok) {
-                 // 화면 업데이트 로직 (기존 코드 활용)
                  const updatedPlans = (currentUser.userPlan || []).map(plan =>
-                    plan.id === planId ? { ...plan, ...updatedPlanData } : plan
+                    plan.planNo === planId ? { 
+                        ...plan, 
+                        planTitle: updatedPlanData.title, 
+                        planContent: updatedPlanData.content 
+                    } : plan
                 );
                 const updatedUser = { ...currentUser, userPlan: updatedPlans };
                 setCurrentUser(updatedUser);
@@ -240,27 +257,22 @@ export const UserProvider = ({children}) => {
 
     // 일정 삭제 함수
     const deletePlan = async (planId) => {
-        // 1. 확인 창 띄우기
         if (!window.confirm('정말로 이 일정을 삭제하시겠습니까?')) return;
         
         try {
-            // 2. 서버에 삭제 요청 (planId는 DB의 PLAN_NO여야 함)
-            const response = await fetch(`/api/plan/delete/${planId}`, {
+            // [수정] URL 변경 (/api/plan/{planNo}) - /delete 제거
+            const response = await fetch(`/api/plan/${planId}`, {
                 method: "DELETE"
             });
             
             if (response.ok) {
-                // 3. 화면(React 상태)에서도 즉시 제거
-                const updatedPlans = (currentUser.userPlan || []).filter(plan => plan.id !== planId && plan.planNo !== planId);
-                
+                const updatedPlans = (currentUser.userPlan || []).filter(plan => plan.planNo !== planId);
                 const updatedUser = {
                     ...currentUser,
                     userPlan: updatedPlans
                 };
-                
                 setCurrentUser(updatedUser);
                 sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
-                
                 alert("일정이 삭제되었습니다.");
             } else {
                 alert("삭제에 실패했습니다.");
@@ -270,7 +282,6 @@ export const UserProvider = ({children}) => {
             alert("서버 오류가 발생했습니다.");
         }
     };
-
     const value = {
         addUser,
         login,

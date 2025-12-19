@@ -20,9 +20,9 @@ const Calendar = () => {
   // currentUser.userPlan이 변경될 때만 events 배열을 다시 계산합니다.
   const events = useMemo(() => {
     return currentUser?.userPlan?.map(plan => ({
-      title: plan.title, // 일정의 제목을 달력에 표시
+      title: plan.planTitle, // 일정의 제목을 달력에 표시
       date: plan.date,
-      id: plan.id.toString() // id는 문자열로 전달하는 것이 안전합니다.
+      id: plan.planNo.toString() // id는 문자열로 전달하는 것이 안전합니다.
     })) || [];
   }, [currentUser]);
 

@@ -79,3 +79,11 @@ export const SearchInput = styled.input`
     font-size: 16px;
     width: 30vw;
 `
+
+export const Select = styled.select`
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-right: 8px;
+`
