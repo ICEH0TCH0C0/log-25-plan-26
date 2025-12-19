@@ -17,6 +17,7 @@ const PlanList = ({ plans, editing, setEditing, categories, onUpdate, onDelete }
                             <BaseSelect 
                                 value={editing.categoryNo} 
                                 onChange={(e) => setEditing({ ...editing, categoryNo: e.target.value })}
+                                style={{alignItems: 'flex-end', marginBottom: '5px'}}
                             >
                                 {categories.map(opt => (
                                     <option key={opt.categoryNo} value={opt.categoryNo}>{opt.categoryName}</option>
@@ -28,16 +29,18 @@ const PlanList = ({ plans, editing, setEditing, categories, onUpdate, onDelete }
                                 value={editing.title} 
                                 onChange={(e) => setEditing({ ...editing, title: e.target.value })} 
                                 placeholder="일정 제목" 
+                                style={{alignItems: 'flex-end', marginBottom: '5px'}}
                             /><br />
                             <Strong>내용: </Strong>
                             <BaseInput 
                                 type="text" 
                                 value={editing.content} 
                                 onChange={(e) => setEditing({ ...editing, content: e.target.value })} 
-                                placeholder="일정 내용" 
+                                placeholder="일정 내용"
+                                style={{alignItems: 'flex-end', marginBottom: '5px'}}
                             />
-                            <BaseButton onClick={() => onUpdate(plan.planNo)}>저장</BaseButton>
-                            <BaseButton onClick={() => setEditing({ id: null, title: '', content: '' })}>취소</BaseButton>
+                            <BaseButton style={{alignItems: 'flex-end', marginBottom: '5px'}} onClick={() => onUpdate(plan.planNo)}>저장</BaseButton>
+                            <BaseButton style={{alignItems: 'flex-end', marginBottom: '5px'}} onClick={() => setEditing({ id: null, title: '', content: '' })}>취소</BaseButton>
                         </>
                     ) : (
                         <>
