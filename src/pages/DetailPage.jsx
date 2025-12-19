@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { Strong } from '../commonStyled/common.styled'
 import { Input } from './MyPage.styled'
 import { useUser } from '../customHooks/UserContext'
-import { Select } from './'
+import { Select } from './DetailPage.styled'
 
 const DetailPage = () => {
   const { date } = useParams();
