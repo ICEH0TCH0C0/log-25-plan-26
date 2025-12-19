@@ -1,11 +1,11 @@
 // src/pages/DetailPage.jsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { DayPlanContainer } from './DetailPage.styled'
+import { WideContainer } from '../commonStyled/common.styled'; // 공통 컨테이너 사용
 import { usePlanManager } from '../customHooks/userPlanManager';
 
 // 분리한 컴포넌트 임포트
-import PlanHeader from '../components/PlanHeader'; // 경로에 맞게 수정 필요
+import PlanHeader from '../components/PlanHeader';
 import PlanList from '../components/PlanList';
 import PlanInputForm from '../components/PlanInpurtFrom';
 
@@ -23,7 +23,7 @@ const DetailPage = () => {
   } = usePlanManager(date);
 
   return (
-    <DayPlanContainer>
+    <WideContainer>
       {/* 2. 각 컴포넌트에 필요한 데이터만 전달(Props)합니다. */}
       
       <PlanHeader 
@@ -53,7 +53,7 @@ const DetailPage = () => {
         onAddCategory={handleAddCategory}
       />
       
-    </DayPlanContainer>
+    </WideContainer>
   );
 };
 

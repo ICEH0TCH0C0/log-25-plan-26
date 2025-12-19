@@ -1,6 +1,7 @@
 import { useUser } from '../customHooks/UserContext'
 import { ROUTES } from '../route/RouteList'
-import { FindContainer, FindBox, FindTitle, FindInput, FindButton, BackToLoginLink } from './FindIdPwdPage.styled'
+import { FindBox } from './FindIdPwdPage.styled' 
+import { CenteredContainer, PageTitle, BaseInput, BaseButton, BaseLink } from '../commonStyled/common.styled'
 import useInput from '../customHooks/useInput'
 
 const FindIdPwdPage = () => {
@@ -12,7 +13,6 @@ const FindIdPwdPage = () => {
 
   // [비밀번호 찾기용 변수]
   const [idForPwd, handleIdForPwd] = useInput('')
-  // 비번 찾을 때도 본인 확인을 위해 이름/폰번호 필요
   const [nameForPwd, handleNameForPwd] = useInput('') 
   const [phoneForPwd, handlePhoneForPwd] = useInput('')
 
@@ -22,10 +22,8 @@ const FindIdPwdPage = () => {
       return
     }
 
-    // 여기에 await 키워드 추가! (결과가 올 때까지 기다림)
     const foundId = await findUserId(nameForId, phoneForId)
     
-    // 이제 foundId는 Promise가 아니라 진짜 문자열(아이디)이거나 null입니다.
     if (foundId) {
       alert(`회원님의 아이디는 [ ${foundId} ] 입니다.`)
     } else {
@@ -34,13 +32,11 @@ const FindIdPwdPage = () => {
   }
 
   const handleFindPwd = async () => {
-    // 3가지 정보가 다 있는지 확인
     if (!idForPwd || !nameForPwd || !phoneForPwd) {
       alert('아이디, 이름, 휴대폰 번호를 모두 입력해주세요.')
       return
     }
     
-    // 3가지 정보를 모두 전달
     const foundPwd = await findUserPwd(idForPwd, nameForPwd, phoneForPwd)
     
     if (foundPwd) {
@@ -51,25 +47,31 @@ const FindIdPwdPage = () => {
   }
 
   return (
-    <FindContainer>
+    // FindContainer -> CenteredContainer (공통 스타일)
+    <CenteredContainer>
       <FindBox>
-        <FindTitle>아이디 찾기</FindTitle>
-        <FindInput type="text" placeholder="이름" value={nameForId} onChange={handleNameForId} />
-        <FindInput type="tel" placeholder="휴대폰 번호" value={phoneForId} onChange={handlePhoneForId} />
-        <FindButton onClick={handleFindId}>아이디 찾기</FindButton>
+        {/* FindTitle -> PageTitle (공통 스타일), 글자 크기 조정이 필요하면 style 속성 사용 */}
+        <PageTitle style={{ fontSize: '22px', margin: '0 0 10px 0' }}>아이디 찾기</PageTitle>
+        {/* FindInput -> BaseInput (공통 스타일) */}
+        <BaseInput type="text" placeholder="이름" value={nameForId} onChange={handleNameForId} />
+        <BaseInput type="tel" placeholder="휴대폰 번호" value={phoneForId} onChange={handlePhoneForId} />
+        {/* FindButton -> BaseButton (공통 스타일) */}
+        <BaseButton onClick={handleFindId}>아이디 찾기</BaseButton>
       </FindBox>
+
       <FindBox>
-        <FindTitle>비밀번호 찾기</FindTitle>
-        <FindInput type="text" placeholder="아이디" value={idForPwd} onChange={handleIdForPwd} />
-        
-        {/* ▼ 추가된 입력창들 */}
-        <FindInput type="text" placeholder="이름" value={nameForPwd} onChange={handleNameForPwd} />
-        <FindInput type="tel" placeholder="휴대폰 번호" value={phoneForPwd} onChange={handlePhoneForPwd} />
-        
-        <FindButton onClick={handleFindPwd}>비밀번호 찾기</FindButton>
+        <PageTitle style={{ fontSize: '22px', margin: '0 0 10px 0' }}>비밀번호 찾기</PageTitle>
+        <BaseInput type="text" placeholder="아이디" value={idForPwd} onChange={handleIdForPwd} />
+        <BaseInput type="text" placeholder="이름" value={nameForPwd} onChange={handleNameForPwd} />
+        <BaseInput type="tel" placeholder="휴대폰 번호" value={phoneForPwd} onChange={handlePhoneForPwd} />
+        <BaseButton onClick={handleFindPwd}>비밀번호 찾기</BaseButton>
       </FindBox>
-      <BackToLoginLink to={ROUTES.login}>로그인 페이지로 돌아가기</BackToLoginLink>
-    </FindContainer>
+
+      {/* BackToLoginLink -> BaseLink (공통 스타일) */}
+      <div style={{ marginTop: '20px' }}>
+        <BaseLink to={ROUTES.login}>로그인 페이지로 돌아가기</BaseLink>
+      </div>
+    </CenteredContainer>
   )
 }
 

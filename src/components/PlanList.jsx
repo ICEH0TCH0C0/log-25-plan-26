@@ -1,7 +1,6 @@
 import React from 'react';
-import { DayPlanContent, DayPlanItem, Select } from '../pages/DetailPage.styled';
-import { Strong } from '../commonStyled/common.styled';
-import { Input } from '../pages/MyPage.styled';
+import { DayPlanContent, DayPlanItem } from '../pages/DetailPage.styled';
+import { Strong, BaseInput, BaseSelect, BaseButton } from '../commonStyled/common.styled';
 
 const PlanList = ({ plans, editing, setEditing, categories, onUpdate, onDelete }) => {
     if (plans.length === 0) {
@@ -15,38 +14,38 @@ const PlanList = ({ plans, editing, setEditing, categories, onUpdate, onDelete }
                     {editing.id === plan.planNo ? (
                         <>
                             <Strong>분류: </Strong>
-                            <Select 
+                            <BaseSelect 
                                 value={editing.categoryNo} 
                                 onChange={(e) => setEditing({ ...editing, categoryNo: e.target.value })}
                             >
                                 {categories.map(opt => (
                                     <option key={opt.categoryNo} value={opt.categoryNo}>{opt.categoryName}</option>
                                 ))}
-                            </Select><br />
+                            </BaseSelect><br />
                             <Strong>제목: </Strong>
-                            <Input 
+                            <BaseInput 
                                 type="text" 
                                 value={editing.title} 
                                 onChange={(e) => setEditing({ ...editing, title: e.target.value })} 
                                 placeholder="일정 제목" 
                             /><br />
                             <Strong>내용: </Strong>
-                            <Input 
+                            <BaseInput 
                                 type="text" 
                                 value={editing.content} 
                                 onChange={(e) => setEditing({ ...editing, content: e.target.value })} 
                                 placeholder="일정 내용" 
                             />
-                            <button onClick={() => onUpdate(plan.planNo)}>저장</button>
-                            <button onClick={() => setEditing({ id: null, title: '', content: '' })}>취소</button>
+                            <BaseButton onClick={() => onUpdate(plan.planNo)}>저장</BaseButton>
+                            <BaseButton onClick={() => setEditing({ id: null, title: '', content: '' })}>취소</BaseButton>
                         </>
                     ) : (
                         <>
                             <Strong>[{plan.categoryName || '기타'}] </Strong>
                             <Strong>제목: {plan.planTitle}</Strong>
                             <Strong>내용: {plan.planContent}</Strong>
-                            <button onClick={() => setEditing({ id: plan.planNo, title: plan.planTitle, content: plan.planContent, categoryNo: plan.categoryNo || '1' })}>수정</button>
-                            <button onClick={() => onDelete(plan.planNo)}>삭제</button>
+                            <BaseButton onClick={() => setEditing({ id: plan.planNo, title: plan.planTitle, content: plan.planContent, categoryNo: plan.categoryNo || '1' })}>수정</BaseButton>
+                            <BaseButton onClick={() => onDelete(plan.planNo)}>삭제</BaseButton>
                         </>
                     )}
                 </DayPlanItem>

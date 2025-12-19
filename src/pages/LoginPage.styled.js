@@ -1,76 +1,18 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-
-export const LoginContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    height: auto; 
-    min-height: 30vh;
-    width: 50vw;
-    background: #f8f9fa;
-    padding: 24px 0; 
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #333;
-`
-
-export const LoginTitleH1 = styled.h1`
-    font-size: 26px;
-    font-weight: bold;
-    color: #333;
-`
+// 필요한 경우 BaseCard 등을 상속받아 스타일 확장 가능
 
 export const LoginForm = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 12px;
-`
-
-export const LoginInput = styled.input`
-    padding: 6px;
-    padding: 10px;
-    margin-bottom: 8px; 
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    width: 100%;
+    max-width: 400px; /* 폼 너비 제한 */
 `
 
 export const SignupAndIdPwdFind = styled.div`
-    border-top: 2px solid #333;
-    border-bottom: 2px solid #333;
-    margin-top: 12px;
-    padding: 6px 12px;
-`
-
-export const LoginBtn = styled.button`
-    margin-top: 12px;
     display: flex;
-    width: auto;
     justify-content: center;
-    background: #3B3B3B;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    padding: 6px 12px;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-        background: #505050;
-    }
-
-`
-
-export const ATag = styled(Link)`
-    text-decoration: none;
-    color: #333;
-    cursor: pointer;
-    font-size: 16px;
-
-    &:hover {
-        color: #b6bee4ff;
-    }
+    gap: 10px;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+    margin-top: 10px;
 `

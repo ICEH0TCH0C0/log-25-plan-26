@@ -1,110 +1,65 @@
 import styled from "styled-components";
 
-export const MyPageContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 20px;
-    gap: 30px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #333;
-    width: 90vw;
-    max-width: 1200px;
-`
-
 export const MyPageHeader = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 12px 4px;
-    border-bottom: 1px solid #333;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #333;
+    margin-bottom: 20px;
 `
+
 export const MyPageHeaderBtnContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
 `
 
-export const MyPageTitle = styled.h2`
-    font-size: 22px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-`
-
 export const MyPageContent = styled.div`
-    flex: 1;
+    display: flex;
     flex-direction: column;
     width: 100%;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 15px;
 `
 
 export const MyPageItem = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    padding: 12px 4px;
-    border-bottom: 1px solid #333;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
 
-    &:last-child {
-        border-bottom: none;
+    input {
+        text-align: right;
+        border: none;
+        background: transparent;
+        font-size: 16px;
+        color: #555;
+        &:focus {
+            outline: none;
+            border-bottom: 1px solid #333;
+        }
     }
 `
 
-export const MyPagebackBtn = styled.button`
-    padding: 6px 12px;
-    font-size: 16px;
-    color: white;
-    background-color: #3b3b3b;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #505050;
-    }
-`
-
-export const MyPageDeleteBtn = styled.button`
-    padding: 6px 12px;
-    font-size: 16px;
+// 버튼 색상 오버라이딩 예시
+export const DeleteButton = styled.button`
+    padding: 8px 12px;
     color: white;
     background-color: #dc3545;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-
-    &:hover {
-        background-color: #d8606cff;
-    }
+    &:hover { background-color: #c82333; }
 `
 
-export const MyPageUpdateBtn = styled.button`
-    padding: 6px 12px;
-    font-size: 16px;
+export const UpdateButton = styled.button`
+    padding: 8px 12px;
     color: white;
     background-color: #007bff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-
-    &:hover {
-        background-color: #288ffdff;
-    }
-`
-
-export const Input = styled.input`
-    padding: 4px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    &:hover { background-color: #0069d9; }
 `
