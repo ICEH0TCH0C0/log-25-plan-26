@@ -26,7 +26,7 @@ export const UserProvider = ({children}) => {
         }
 
         try {
-            const response = await fetch("/api/user/signup", {
+            const response = await fetch("/api/users", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -51,7 +51,7 @@ export const UserProvider = ({children}) => {
     const login = async (userId, userPwd) => {
         try {
             // GET 방식은 보안에 취약하므로 보통 POST
-            const response = await fetch("/api/user/login", { 
+            const response = await fetch("/api/sessions", { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId, userPwd }) 
@@ -88,7 +88,7 @@ export const UserProvider = ({children}) => {
     // 이름과 휴대폰 번호로 아이디 찾기
     const findUserId = async (userName, userPhone) => {
         try {
-            const response = await fetch("/api/user/findId", {
+            const response = await fetch("/api/users/id", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userName, userPhone })
@@ -112,7 +112,7 @@ export const UserProvider = ({children}) => {
         // 보안상 아이디+이름+폰번호를 다 검사하는 게 좋지만, 
         // 현재 UI에 맞춰 아이디로만 조회하도록 작성합니다.
         try {
-            const response = await fetch("/api/user/findPwd", {
+            const response = await fetch("/api/users/pwd", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId, userName, userPhone })
@@ -136,7 +136,7 @@ export const UserProvider = ({children}) => {
         try {
             // [수정] 서버에 deleteUser 기능이 구현되어 있어야 함
             // UserController에 @DeleteMapping("/{userNo}") 추가 필요
-            const response = await fetch(`/api/user/${userNo}`, { 
+            const response = await fetch(`/api/users/${userNo}`, { 
                 method: "DELETE"
             });
 
@@ -158,7 +158,7 @@ export const UserProvider = ({children}) => {
     const updateUser = async (updatedUser) => {
         try {
             // [수정] URL에 userNo 포함 (/api/user/{userNo})
-            const response = await fetch(`/api/user/${updatedUser.userNo}`, { 
+            const response = await fetch(`/api/users/${updatedUser.userNo}`, { 
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedUser)
@@ -192,7 +192,7 @@ export const UserProvider = ({children}) => {
         if (!currentUser) return;
         
         try {
-            const response = await fetch(`/api/plan/${currentUser.userNo}`, { 
+            const response = await fetch(`/api/plans/${currentUser.userNo}`, { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -229,7 +229,7 @@ export const UserProvider = ({children}) => {
     const updatePlan = async (planId, updatedPlanData) => {
         try {
             // [수정] URL 변경 (/api/plan/{planNo})
-            const response = await fetch(`/api/plan/${planId}`, {
+            const response = await fetch(`/api/plans/${planId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -261,7 +261,7 @@ export const UserProvider = ({children}) => {
         
         try {
             // [수정] URL 변경 (/api/plan/{planNo}) - /delete 제거
-            const response = await fetch(`/api/plan/${planId}`, {
+            const response = await fetch(`/api/plans/${planId}`, {
                 method: "DELETE"
             });
             

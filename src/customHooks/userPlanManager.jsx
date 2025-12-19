@@ -18,7 +18,10 @@ export const usePlanManager = (date) => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch('/api/category/all');
+                const res = await fetch('/api/categories', {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
                 if (res.ok) {
                     const data = await res.json();
                     setCategories(data);
@@ -36,7 +39,8 @@ export const usePlanManager = (date) => {
             if (!currentUser) return;
             try {
                 const response = await fetch(
-                    `/api/plan/search?userNo=${currentUser.userNo}&date=${date}&keyword=${searchTerm}`
+                    `/api/plans?userNo=${currentUser.userNo}&date=${date}&keyword=${searchTerm}`, 
+                    { method: "GET" }
                 );
                 if (response.ok) {
                     const data = await response.json();
@@ -78,7 +82,7 @@ export const usePlanManager = (date) => {
     const handleAddCategory = async () => {
         if(!newCategoryName.trim()) return;
         try {
-            const res = await fetch("/api/category/add", {
+            const res = await fetch("/api/categories", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ categoryName: newCategoryName })
