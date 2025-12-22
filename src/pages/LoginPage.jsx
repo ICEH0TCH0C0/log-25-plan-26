@@ -19,7 +19,6 @@ const LoginPage = () => {
             navigate(`/main/${loggedInUser.userNo}`);
         } else {
             console.error("로그인 정보에 ID가 없습니다:", loggedInUser);
-            alert("로그인 정보를 불러올 수 없습니다.");
         }
     }
 

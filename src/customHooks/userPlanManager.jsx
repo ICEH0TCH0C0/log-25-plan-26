@@ -14,7 +14,7 @@ export const usePlanManager = (date) => {
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
 
-    // 1. 카테고리 목록 가져오기
+    // 카테고리 목록 가져오기
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -33,7 +33,7 @@ export const usePlanManager = (date) => {
         fetchCategories();
     }, []);
 
-    // 2. 일정 목록 가져오기 (검색어 변경 시 자동 실행)
+    // 일정 목록 가져오기 (검색어 변경 시 자동 실행)
     useEffect(() => {
         const fetchPlans = async () => {
             if (!currentUser) return;
@@ -53,7 +53,7 @@ export const usePlanManager = (date) => {
         fetchPlans();
     }, [currentUser, date, searchTerm]);
 
-    // 3. 핸들러 함수들
+    // 핸들러 함수들
     const handleAddPlan = () => {
         if (!newPlan.title.trim() || !newPlan.content.trim()) {
             alert('일정 제목과 내용을 모두 입력해주세요.');
@@ -79,6 +79,7 @@ export const usePlanManager = (date) => {
         alert('수정되었습니다.');
     };
 
+    // 카테고리 추가
     const handleAddCategory = async () => {
         if(!newCategoryName.trim()) return;
         try {
@@ -93,9 +94,13 @@ export const usePlanManager = (date) => {
                 setNewPlan(prev => ({ ...prev, categoryNo: savedCategory.categoryNo }));
                 setIsAddingCategory(false);
                 setNewCategoryName("");
+            } else {
+                const errorData = await res.json();
+                alert(errorData.error || '카테고리 추가에 실패했습니다.');
             }
         } catch(err) {
             console.error(err);
+            alert('카테고리 추가 중 오류가 발생했습니다.');
         }
     };
 

@@ -37,13 +37,34 @@ export const UserProvider = ({children}) => {
             if (response.ok) {
                 return true;
             } else {
-                alert("회원 등록에 실패했습니다.");
+                const errorData = await response.json();
+                alert(errorData.error || "아이디가 중복되었습니다.");
                 return false;
             }
         } catch (error) {
             console.error(error);
             alert("회원가입에 실패했습니다.");
             return false;
+        }
+    }
+
+    // 아이디 중복 체크 함수
+    const checkIdDuplicate = async (userId) => {
+        try {
+            const response = await fetch(`/api/users/check?userId=${userId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                return data.isAvailable;
+            }
+            return false; // 응답이 실패하면 안전하게 '사용 불가'로 처리
+        } catch (error) {
+            console.error("중복 체크 에러:", error);
+            return false; // 에러 발생 시 '사용 불가'로 처리
         }
     }
 
@@ -285,6 +306,7 @@ export const UserProvider = ({children}) => {
     const value = {
         addUser,
         login,
+        checkIdDuplicate,
         currentUser,
         logout,
         findUserId,

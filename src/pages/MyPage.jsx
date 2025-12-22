@@ -61,7 +61,6 @@ const MyPage = () => {
         {/* MyPageTitle -> PageTitle */}
         <PageTitle style={{ marginBottom: 0, fontSize: '24px' }}>마이 페이지</PageTitle>
         <MyPageHeaderBtnContainer>
-          {/* UpdateButton이 없다면 <BaseButton onClick={...} style={{backgroundColor: '#007bff'}}>수정하기</BaseButton> 로 대체 */}
           <UpdateButton onClick={handleUpdate}>수정하기</UpdateButton>
           <DeleteButton onClick={handleDelete}>탈퇴하기</DeleteButton>
           <BaseButton onClick={() => window.history.back()}>뒤로가기</BaseButton>
@@ -87,7 +86,7 @@ const MyPage = () => {
             name="userId" 
             value={userInfo.userId} 
             readOnly 
-            style={{ width: '60%', marginBottom: 0, textAlign: 'right', border: 'none', background: 'transparent' }}
+            style={{ width: '60%', marginBottom: 0, textAlign: 'right', border: 'none', background: 'transparent', cursor: 'not-allowed' }}
           />
         </MyPageItem>
         <MyPageItem>

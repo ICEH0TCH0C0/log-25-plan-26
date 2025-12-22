@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../customHooks/UserContext'
 import { ROUTES } from '../route/RouteList'
@@ -8,7 +9,7 @@ import { CenteredContainer, PageTitle, BaseInput, BaseButton, BaseLink } from '.
 import useInput from '../customHooks/useInput'
 
 const SignupPage = () => {
-  const { addUser } = useUser()
+  const { addUser, checkIdDuplicate } = useUser()
   const navigate = useNavigate()
 
   const [userId, handleUserId] = useInput('')
@@ -17,8 +18,29 @@ const SignupPage = () => {
   const [userPhone, handleUserPhone] = useInput('')
   const [userEmail, handleUserEmail] = useInput('')
 
-  const handleSignup = async () => {
+  const [isIdChecked, setIsIdChecked] = useState(false)
 
+  const handleUserIdChange = (e) => {
+    handleUserId(e)
+    setIsIdChecked(false)
+  }
+
+  const handleCheckId = async () => {
+    if (!userId) {
+      alert('아이디를 입력해주세요.')
+      return
+    }
+    const isAvailable = await checkIdDuplicate(userId)
+    if (isAvailable) {
+      alert('사용 가능한 아이디입니다.')
+      setIsIdChecked(true)
+    } else {
+      alert('이미 사용 중인 아이디입니다.')
+      setIsIdChecked(false)
+    }
+  }
+
+  const handleSignup = async () => {
     if (!userId || !userPwd || !userName || !userPhone || !userEmail) {
       alert('모든 필드를 입력해주세요.')
       return
@@ -27,6 +49,11 @@ const SignupPage = () => {
     if (userPwd.length < 4) {
       alert('비밀번호는 4자리 이상이어야 합니다.');
       return;
+    }
+
+    if (!isIdChecked) {
+      alert('아이디 중복 확인을 해주세요.')
+      return
     }
 
     // [참고] addUser는 비동기 함수이므로 await를 붙여서 결과를 기다려야 정확합니다.
@@ -46,14 +73,20 @@ const SignupPage = () => {
       
       <SignupForm>
         {/* SignupInput -> BaseInput (공통 스타일) */}
-        <BaseInput type="text" placeholder="아이디" value={userId} onChange={handleUserId} />
+        <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+          <BaseInput type="text" placeholder="아이디" value={userId} onChange={handleUserIdChange} style={{ flex: 1 }} />
+          <BaseButton type="button" onClick={handleCheckId} style={{ width: '100px', height: '40px', whiteSpace: 'nowrap', fontSize: '14px', padding: '0', justifyContent: 'flex-start' }}>
+            중복 확인
+          </BaseButton>
+        </div>
+        
         <BaseInput type="password" placeholder="비밀번호" value={userPwd} onChange={handleUserPwd} />
         <BaseInput type="text" placeholder="이름" value={userName} onChange={handleUserName} />
         <BaseInput type="tel" placeholder="휴대폰 번호" value={userPhone} onChange={handleUserPhone} />
         <BaseInput type="email" placeholder="이메일" value={userEmail} onChange={handleUserEmail} />
         
         {/* SignupBtn -> BaseButton (공통 스타일) */}
-        <BaseButton onClick={handleSignup}>
+        <BaseButton onClick={handleSignup} disabled={!isIdChecked} style={{ opacity: isIdChecked ? 1 : 0.6, cursor: isIdChecked ? 'pointer' : 'not-allowed' }}>
           회원가입
         </BaseButton>
         

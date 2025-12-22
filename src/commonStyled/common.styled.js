@@ -40,7 +40,7 @@ export const CenteredContainer = styled(BaseCard)`
 // 와이드 컨테이너 (메인, 상세, 마이페이지 등)
 export const WideContainer = styled(BaseCard)`
     width: 90vw;
-    max-width: 1200px;
+    max-width: 600px;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
