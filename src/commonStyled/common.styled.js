@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-// 1. 텍스트 관련
+// 텍스트 관련
 export const Strong = styled.strong`
     font-weight: bold;
     color: #333;
@@ -15,7 +15,7 @@ export const PageTitle = styled.h1`
     margin-bottom: 24px;
 `
 
-// 2. 컨테이너 관련
+// 컨테이너 관련
 // 기본 카드 스타일 (배경, 테두리, 그림자, 패딩)
 export const BaseCard = styled.div`
     background-color: #f8f9fa;
@@ -40,13 +40,13 @@ export const CenteredContainer = styled(BaseCard)`
 // 와이드 컨테이너 (메인, 상세, 마이페이지 등)
 export const WideContainer = styled(BaseCard)`
     width: 90vw;
-    max-width: 600px;
+    max-width: 1000px;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
 `
 
-// 3. 폼 요소 관련
+// 폼 요소 관련
 export const BaseInput = styled.input`
     padding: 10px;
     border: 1px solid #ccc;
@@ -87,7 +87,7 @@ export const BaseButton = styled.button`
     }
 `
 
-// 4. 링크 관련
+// 링크 관련
 export const BaseLink = styled(Link)`
     text-decoration: none;
     color: #333;

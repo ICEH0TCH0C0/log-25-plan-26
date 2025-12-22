@@ -56,7 +56,7 @@ const MyPage = () => {
 
   return (
     // MyPageContainer -> WideContainer
-    <WideContainer>
+    <WideContainer style={{width: '600px'}}>
       <MyPageHeader>
         {/* MyPageTitle -> PageTitle */}
         <PageTitle style={{ marginBottom: 0, fontSize: '24px' }}>마이 페이지</PageTitle>

@@ -24,7 +24,6 @@ const DetailPage = () => {
 
   return (
     <WideContainer>
-      {/* 2. 각 컴포넌트에 필요한 데이터만 전달(Props)합니다. */}
       
       <PlanHeader 
         date={date} 
