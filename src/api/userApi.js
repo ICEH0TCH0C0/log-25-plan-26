@@ -2,7 +2,7 @@ import api from './axios';
 
 export const checkIdDuplicate = async (userId) => {
     try {
-        const response = await api.get(`/users/check`, {
+        const response = await api.get(`/users/availability`, {
             params: { userId },
         });
         return response.data.isAvailable;
@@ -26,7 +26,7 @@ export const addUser = async (userData) => {
 
 export const loginUser = async (userId, userPwd) => {
     try {
-        const response = await api.post('/sessions', { userId, userPwd });
+        const response = await api.post('/tokens', { userId, userPwd });
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error };
@@ -35,19 +35,19 @@ export const loginUser = async (userId, userPwd) => {
 
 export const findUserId = async (userName, userPhone) => {
     try {
-        const response = await api.post('/users/id', { userName, userPhone });
-        return response.data.userId;
+        const response = await api.post('/users/id-recovery', { userName, userPhone });
+        return response.data;
     } catch (error) {
         return null;
     }
 };
 
-export const findUserPwd = async (userId, userName, userPhone) => {
+export const resetUserPwd = async (userId, userName, userPhone, newPassword) => {
     try {
-        const response = await api.post('/users/pwd', { userId, userName, userPhone });
-        return response.data.userPwd;
+        const response = await api.post('/users/password-reset', { userId, userName, userPhone, newPassword });
+        return { success: true, data: response.data };
     } catch (error) {
-        return null;
+        return { success: false, error: error };
     }
 };
 

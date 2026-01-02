@@ -5,16 +5,17 @@ import { CenteredContainer, PageTitle, BaseInput, BaseButton, BaseLink } from '.
 import useInput from '../customHooks/useInput'
 
 const FindIdPwdPage = () => {
-  const { findUserId, findUserPwd } = useUserStore()
+  const { findUserId, resetUserPwd } = useUserStore()
 
   // [아이디 찾기용 변수]
   const [nameForId, handleNameForId] = useInput('')
   const [phoneForId, handlePhoneForId] = useInput('')
 
-  // [비밀번호 찾기용 변수]
-  const [idForPwd, handleIdForPwd] = useInput('')
-  const [nameForPwd, handleNameForPwd] = useInput('')
-  const [phoneForPwd, handlePhoneForPwd] = useInput('')
+  // [비밀번호 재설정용 변수]
+  const [idForReset, handleIdForReset] = useInput('')
+  const [nameForReset, handleNameForReset] = useInput('')
+  const [phoneForReset, handlePhoneForReset] = useInput('')
+  const [newPwd, handleNewPwd] = useInput('')
 
   const handleFindId = async () => {
     if (!nameForId || !phoneForId) {
@@ -22,27 +23,27 @@ const FindIdPwdPage = () => {
       return
     }
 
-    const foundId = await findUserId(nameForId, phoneForId)
+    const foundIdData = await findUserId(nameForId, phoneForId)
 
-    if (foundId) {
-      alert(`회원님의 아이디는 [ ${foundId} ] 입니다.`)
+    if (foundIdData && foundIdData.userId) {
+      alert(`회원님의 아이디는 [ ${foundIdData.userId} ] 입니다.`)
     } else {
       alert('일치하는 사용자 정보가 없습니다.')
     }
   }
 
-  const handleFindPwd = async () => {
-    if (!idForPwd || !nameForPwd || !phoneForPwd) {
-      alert('아이디, 이름, 휴대폰 번호를 모두 입력해주세요.')
+  const handleResetPwd = async () => {
+    if (!idForReset || !nameForReset || !phoneForReset || !newPwd) {
+      alert('모든 정보를 입력해주세요.')
       return
     }
 
-    const foundPwd = await findUserPwd(idForPwd, nameForPwd, phoneForPwd)
+    const result = await resetUserPwd(idForReset, nameForReset, phoneForReset, newPwd)
 
-    if (foundPwd) {
-      alert(`회원님의 비밀번호는 [ ${foundPwd} ] 입니다.`)
+    if (result.success) {
+      alert('비밀번호가 성공적으로 변경되었습니다. 로그인 해주세요.')
     } else {
-      alert('일치하는 사용자 정보가 없습니다.')
+      alert('정보가 일치하지 않거나 변경에 실패했습니다.')
     }
   }
 
@@ -60,11 +61,12 @@ const FindIdPwdPage = () => {
       </FindBox>
 
       <FindBox>
-        <PageTitle style={{ fontSize: '22px', margin: '0 0 10px 0' }}>비밀번호 찾기</PageTitle>
-        <BaseInput type="text" placeholder="아이디" value={idForPwd} onChange={handleIdForPwd} />
-        <BaseInput type="text" placeholder="이름" value={nameForPwd} onChange={handleNameForPwd} />
-        <BaseInput type="tel" placeholder="휴대폰 번호" value={phoneForPwd} onChange={handlePhoneForPwd} />
-        <BaseButton onClick={handleFindPwd}>비밀번호 찾기</BaseButton>
+        <PageTitle style={{ fontSize: '22px', margin: '0 0 10px 0' }}>비밀번호 재설정</PageTitle>
+        <BaseInput type="text" placeholder="아이디" value={idForReset} onChange={handleIdForReset} />
+        <BaseInput type="text" placeholder="이름" value={nameForReset} onChange={handleNameForReset} />
+        <BaseInput type="tel" placeholder="휴대폰 번호" value={phoneForReset} onChange={handlePhoneForReset} />
+        <BaseInput type="password" placeholder="새 비밀번호" value={newPwd} onChange={handleNewPwd} />
+        <BaseButton onClick={handleResetPwd}>비밀번호 변경</BaseButton>
       </FindBox>
 
       {/* BackToLoginLink -> BaseLink (공통 스타일) */}
