@@ -1,10 +1,16 @@
 // src/customHooks/usePlanManager.js
 import { useState, useEffect } from 'react';
-import { useUser } from './UserContext';
+import { useUserStore } from '../store/useUserStore';
+import * as planApi from '../api/planApi';
+import * as categoryApi from '../api/categoryApi';
 
 export const usePlanManager = (date) => {
-    const { currentUser, addPlan, updatePlan, deletePlan } = useUser();
-    
+    // Zustand Store에서 상태와 액션 가져오기
+    const currentUser = useUserStore(state => state.currentUser);
+    const addPlan = useUserStore(state => state.addPlan);
+    const updatePlan = useUserStore(state => state.updatePlan);
+    const deletePlan = useUserStore(state => state.deletePlan);
+
     // 상태 관리
     const [searchTerm, setSearchTerm] = useState('');
     const [editing, setEditing] = useState({ id: null, title: '', content: '', categoryNo: '1' });
@@ -16,41 +22,21 @@ export const usePlanManager = (date) => {
 
     // 카테고리 목록 가져오기
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await fetch('/api/categories', {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    setCategories(data);
-                }
-            } catch (err) {
-                console.error(err);
-            }
+        const loadCategories = async () => {
+            const data = await categoryApi.fetchCategories();
+            setCategories(data);
         };
-        fetchCategories();
+        loadCategories();
     }, []);
 
     // 일정 목록 가져오기 (검색어 변경 시 자동 실행)
     useEffect(() => {
-        const fetchPlans = async () => {
+        const loadPlans = async () => {
             if (!currentUser) return;
-            try {
-                const response = await fetch(
-                    `/api/plans?userNo=${currentUser.userNo}&date=${date}&keyword=${searchTerm}`, 
-                    { method: "GET" }
-                );
-                if (response.ok) {
-                    const data = await response.json();
-                    setPlans(data);
-                }
-            } catch (error) {
-                console.error("검색 에러:", error);
-            }
+            const data = await planApi.fetchPlans(currentUser.userNo, date, searchTerm);
+            setPlans(data);
         };
-        fetchPlans();
+        loadPlans();
     }, [currentUser, date, searchTerm]);
 
     // 핸들러 함수들
@@ -81,26 +67,17 @@ export const usePlanManager = (date) => {
 
     // 카테고리 추가
     const handleAddCategory = async () => {
-        if(!newCategoryName.trim()) return;
-        try {
-            const res = await fetch("/api/categories", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ categoryName: newCategoryName })
-            });
-            if(res.ok) {
-                const savedCategory = await res.json();
-                setCategories([...categories, savedCategory]);
-                setNewPlan(prev => ({ ...prev, categoryNo: savedCategory.categoryNo }));
-                setIsAddingCategory(false);
-                setNewCategoryName("");
-            } else {
-                const errorData = await res.json();
-                alert(errorData.error || '카테고리 추가에 실패했습니다.');
-            }
-        } catch(err) {
-            console.error(err);
-            alert('카테고리 추가 중 오류가 발생했습니다.');
+        if (!newCategoryName.trim()) return;
+
+        const result = await categoryApi.addCategory(newCategoryName);
+        if (result.success) {
+            const savedCategory = result.data;
+            setCategories([...categories, savedCategory]);
+            setNewPlan(prev => ({ ...prev, categoryNo: savedCategory.categoryNo }));
+            setIsAddingCategory(false);
+            setNewCategoryName("");
+        } else {
+            alert(result.error);
         }
     };
 

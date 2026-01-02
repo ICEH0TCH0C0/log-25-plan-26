@@ -1,11 +1,11 @@
-import { useUser } from '../customHooks/UserContext'
+import { useUserStore } from '../store/useUserStore'
 import { ROUTES } from '../route/RouteList'
-import { FindBox } from './FindIdPwdPage.styled' 
+import { FindBox } from './FindIdPwdPage.styled'
 import { CenteredContainer, PageTitle, BaseInput, BaseButton, BaseLink } from '../commonStyled/common.styled'
 import useInput from '../customHooks/useInput'
 
 const FindIdPwdPage = () => {
-  const { findUserId, findUserPwd } = useUser()
+  const { findUserId, findUserPwd } = useUserStore()
 
   // [아이디 찾기용 변수]
   const [nameForId, handleNameForId] = useInput('')
@@ -13,17 +13,17 @@ const FindIdPwdPage = () => {
 
   // [비밀번호 찾기용 변수]
   const [idForPwd, handleIdForPwd] = useInput('')
-  const [nameForPwd, handleNameForPwd] = useInput('') 
+  const [nameForPwd, handleNameForPwd] = useInput('')
   const [phoneForPwd, handlePhoneForPwd] = useInput('')
 
-  const handleFindId = async () => { 
+  const handleFindId = async () => {
     if (!nameForId || !phoneForId) {
       alert('이름과 휴대폰 번호를 모두 입력해주세요.')
       return
     }
 
     const foundId = await findUserId(nameForId, phoneForId)
-    
+
     if (foundId) {
       alert(`회원님의 아이디는 [ ${foundId} ] 입니다.`)
     } else {
@@ -36,9 +36,9 @@ const FindIdPwdPage = () => {
       alert('아이디, 이름, 휴대폰 번호를 모두 입력해주세요.')
       return
     }
-    
+
     const foundPwd = await findUserPwd(idForPwd, nameForPwd, phoneForPwd)
-    
+
     if (foundPwd) {
       alert(`회원님의 비밀번호는 [ ${foundPwd} ] 입니다.`)
     } else {

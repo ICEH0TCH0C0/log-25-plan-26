@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../route/RouteList'
 import { ErrorContainer, ErrorTitle, ErrorMessage, HomeButton } from './ErrorPage.styled'
-import { useUser } from '../customHooks/UserContext'
+import { useUserStore } from '../store/useUserStore'
 
 const ErrorPage = () => {
   const navigate = useNavigate()
-  const { logout } = useUser()
+  const { logout } = useUserStore()
 
   const handleGoToLogin = () => {
     logout() // 세션에서 사용자 정보를 제거합니다.

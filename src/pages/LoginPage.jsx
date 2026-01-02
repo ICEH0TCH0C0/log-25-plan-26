@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../customHooks/UserContext'
+import { useUserStore } from '../store/useUserStore'
 import { ROUTES } from '../route/RouteList';
 import { LoginForm, SignupAndIdPwdFind } from './LoginPage.styled'
 // 공통 스타일 import
@@ -7,9 +7,9 @@ import { CenteredContainer, PageTitle, BaseInput, BaseButton, BaseLink } from '.
 import useInput from '../customHooks/useInput';
 
 const LoginPage = () => {
-    const { login } = useUser();
+    const { login } = useUserStore();
     const navigate = useNavigate();
-    
+
     const [userId, handleUserId] = useInput('');
     const [userPwd, handleUserPwd] = useInput('');
 
@@ -23,20 +23,20 @@ const LoginPage = () => {
     }
 
     return (
-    <CenteredContainer>
-        <PageTitle>로그인</PageTitle>
-        <LoginForm>
-            <BaseInput type='text' placeholder='아이디' value={userId} onChange={handleUserId} />
-            <BaseInput type='password' placeholder='비밀번호' value={userPwd} onChange={handleUserPwd} />
-            <BaseButton onClick={handleLogin}>로그인</BaseButton>
-            
-            <SignupAndIdPwdFind>
-                <BaseLink to={ROUTES.findIdPwd}>아이디/비밀번호 찾기</BaseLink> | 
-                <BaseLink to={ROUTES.signup}> 회원가입</BaseLink>
-            </SignupAndIdPwdFind>
-        </LoginForm>
-    </CenteredContainer>
-  )
+        <CenteredContainer>
+            <PageTitle>로그인</PageTitle>
+            <LoginForm>
+                <BaseInput type='text' placeholder='아이디' value={userId} onChange={handleUserId} />
+                <BaseInput type='password' placeholder='비밀번호' value={userPwd} onChange={handleUserPwd} />
+                <BaseButton onClick={handleLogin}>로그인</BaseButton>
+
+                <SignupAndIdPwdFind>
+                    <BaseLink to={ROUTES.findIdPwd}>아이디/비밀번호 찾기</BaseLink> |
+                    <BaseLink to={ROUTES.signup}> 회원가입</BaseLink>
+                </SignupAndIdPwdFind>
+            </LoginForm>
+        </CenteredContainer>
+    )
 }
 
 export default LoginPage

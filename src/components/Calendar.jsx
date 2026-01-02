@@ -3,12 +3,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import { CalendarContainer } from './Calendar.styled'
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../customHooks/UserContext';
+import { useUserStore } from '../store/useUserStore';
 import { useMemo } from 'react';
 
 const Calendar = () => {
   const nav = useNavigate();
-  const { currentUser } = useUser();
+  const { currentUser } = useUserStore();
 
   const handleDateClick = (arg) => {
     // currentUser.id를 사용하여 URL을 생성합니다.

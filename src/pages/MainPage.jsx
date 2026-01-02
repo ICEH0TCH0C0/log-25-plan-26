@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Calendar from '../components/Calendar.jsx'
-import { useUser } from '../customHooks/UserContext.jsx'
+import { useUserStore } from '../store/useUserStore'
 import { ROUTES } from '../route/RouteList.js'
 import { Header, HeaderButton, HeaderTitle, PageContainer } from './MainPage.styled.js'
 
 const MainPage = () => {
   const { id } = useParams()
-  const { currentUser, logout } = useUser()
+  const { currentUser, logout } = useUserStore()
   const navigate = useNavigate()
 
   useEffect(() => {
